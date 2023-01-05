@@ -1,5 +1,6 @@
 package com.musobek.clickapp.entity;
 
+import com.musobek.clickapp.entity.template.AbsLongEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,20 +11,20 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class WorkspaceUser {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class WorkspaceUser extends AbsLongEntity {
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Workspace workspaceId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User ownerId;
 
-    @ManyToOne
-    private WorkspaceRole workspaceRoleId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private WorkspaceRole workspaceRole;
 
     private Timestamp dateInvited;
+
     private Timestamp dateJoined;
+
 }

@@ -1,24 +1,45 @@
 package com.musobek.clickapp.entity;
 
+import com.musobek.clickapp.entity.enam.WorkSpaceRoleName;
+import com.musobek.clickapp.entity.template.AbsLongEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
-@Data
+import java.util.Objects;
+
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class WorkspaceRole {
+public class WorkspaceRole  extends AbsLongEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+
+    @Column(nullable = false)
     private String name;
+
 
     @ManyToOne
     private Workspace workspaceId;
 
-    private String extendRole;
+    @Enumerated(EnumType.STRING)
+    private WorkSpaceRoleName extendsRole;
 
+    public WorkspaceRole(Workspace workspaceSave, WorkSpaceRoleName roleOwner, Object extendsRole) {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        WorkspaceRole that = (WorkspaceRole) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -1,5 +1,6 @@
 package com.musobek.clickapp.entity;
 
+import com.musobek.clickapp.entity.template.AbsLongEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,11 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Category {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Category extends AbsLongEntity {
 
     private String name;
     @ManyToOne

@@ -1,22 +1,38 @@
 package com.musobek.clickapp.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.musobek.clickapp.entity.template.AbsLongEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.*;
+import org.hibernate.Hibernate;
+
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "attachment")
-public class Attachment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Attachment extends AbsLongEntity
+{
+
     private String name;
     private String originalName;
-    private byte[] size;
+    private Long size;
     private String contentType;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Attachment that = (Attachment) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
