@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/workspace")
 @RequiredArgsConstructor
 public class WorkspaceController {
     private final WorkspaceService workspaceService;

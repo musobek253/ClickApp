@@ -38,7 +38,7 @@ public class AuthController {
                     loginDTO.getPassword()
             ));
             User user = (User) authenticate.getPrincipal();
-            String token = jwtProvayder.generateToken(user.getEmail());
+            String token = jwtProvayder.generateToken(user);
             return ResponseEntity.ok(token);
         } catch (Exception e) {
             return ResponseEntity.ok(new ApiResponse("Parol yoki login xato", false));

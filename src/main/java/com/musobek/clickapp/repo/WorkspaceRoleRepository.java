@@ -10,4 +10,6 @@ public interface WorkspaceRoleRepository extends JpaRepository<WorkspaceRole, Lo
 
 
     Optional<WorkspaceRole> findByWorkspaceId(Workspace workspaceId);
+    Optional<WorkspaceRole> findByIdAndWorkspaceIdId(Long id, Long workspaceId_id);
+    boolean existsByNameAndWorkspaceIdId(String name, Long workspaceId_id);
 }
