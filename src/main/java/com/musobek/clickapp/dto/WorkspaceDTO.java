@@ -6,7 +6,6 @@ public class WorkspaceDTO {
 
     private String name;
 
-
     private String color;
 
     private Long avatarId;

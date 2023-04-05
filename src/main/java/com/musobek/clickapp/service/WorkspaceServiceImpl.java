@@ -1,10 +1,13 @@
 package com.musobek.clickapp.service;
 
 import com.musobek.clickapp.dto.ApiResponse;
+import com.musobek.clickapp.dto.MemberDTO;
 import com.musobek.clickapp.dto.WorkspaceDTO;
 import com.musobek.clickapp.entity.*;
+import com.musobek.clickapp.entity.enam.AddType;
 import com.musobek.clickapp.entity.enam.Permission;
 import com.musobek.clickapp.entity.enam.WorkSpaceRoleName;
+import com.musobek.clickapp.mapper.MapstructMapper;
 import com.musobek.clickapp.repo.*;
 import com.musobek.clickapp.service.impl.WorkspaceService;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +19,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class WorkspaceServiceImpl implements WorkspaceService {
+    private final MapstructMapper mapper;
     private final WorkspaceRepository workspaceRepository;
     private final AttachmentRepository attachmentRepository;
 
@@ -90,26 +95,110 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public ApiResponse editWorkspace(WorkspaceDTO workspaceDTO) {
-        return null;
+    public ApiResponse editWorkspace(Long id, WorkspaceDTO dto) throws ResourceNotFoundException {
+        Optional<Workspace> optionalWorkspace = workspaceRepository.findById(id);
+        if (!optionalWorkspace.isPresent()) {
+            return new ApiResponse("Workspace not found", false);
+        }
+        Workspace workspace = optionalWorkspace.get();
+        if (workspaceRepository.existsByOwnerIdAndNameAndIdNot(workspace.getOwner().getId(), dto.getName(), id)){
+            return new ApiResponse("Sizda bunday nomli ishxona mavjud", false);
+        }
+
+        workspace.setAttachmentId(dto.getAvatarId() == null ? null : attachmentRepository.findById(dto.getAvatarId()).orElseThrow(() -> new ResourceNotFoundException("attachment")));
+        workspace.setColor(dto.getColor());
+        workspace.setName(dto.getName());
+        workspaceRepository.save(workspace);
+        return new ApiResponse("Updated", true);
+    }
+
+
+    @Override
+    public ApiResponse deleteWorkspace(Long id) {
+        try {
+            workspaceRepository.deleteById(id);
+            return new ApiResponse("O'chirildi", true);
+        } catch (Exception e) {
+            return new ApiResponse("Xatolik", false);
+        }
+    }
+
+    @Override
+    public ApiResponse addOrEditOrRemoveWorkspace(Long id, MemberDTO dto) throws ResourceNotFoundException {
+        if (dto.getAddType().equals(AddType.ADD)){
+            WorkspaceUser workspaceUser = new WorkspaceUser();
+            Workspace workspace = workspaceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("id"));
+            User user = userRepository.findById(dto.getId()).orElseThrow(() -> new ResourceNotFoundException("id"));
+            WorkspaceRole workspaceRole = workspaceRoleRepository.findById(dto.getRoleId()).orElseThrow(() -> new ResourceNotFoundException("id"));
+
+            workspaceUser.setWorkspaceId(workspace);
+            workspaceUser.setWorkspaceRole(workspaceRole);
+            workspaceUser.setOwnerId(user);
+            workspaceUser.setDateInvited(new Timestamp(System.currentTimeMillis()));
+            workspaceUserRepository.save(workspaceUser);
+            return new ApiResponse("successfuly",true);
+        } else if (dto.getAddType().equals(AddType.EDIT)) {
+            WorkspaceUser workspaceUser = workspaceUserRepository.findByWorkspaceIdIdAndOwnerIdId(id, dto.getId()).orElseGet(WorkspaceUser::new);
+            workspaceUser.setWorkspaceRole(workspaceRoleRepository.findById(dto.getRoleId()).orElseThrow(() -> new ResourceNotFoundException("id")));
+            workspaceUserRepository.save(workspaceUser);
+        } else if (dto.getAddType().equals(AddType.REMOVE)) {
+            workspaceUserRepository.deleteByWorkspaceIdIdAndOwnerIdId(id, dto.getId());
+        }
+        return new ApiResponse("Muvaffaqiyatli", true);
+
+    }
+
+
+    @Override
+    public ApiResponse joinToWorkspace(Long id, User user) {
+        Optional<WorkspaceUser> optionalWorkspaceUser = workspaceUserRepository.findByWorkspaceIdIdAndOwnerIdId(id, user.getId());
+        if (optionalWorkspaceUser.isPresent()) {
+            WorkspaceUser workspaceUser = optionalWorkspaceUser.get();
+            workspaceUser.setDateJoined(new Timestamp(System.currentTimeMillis()));
+            workspaceUserRepository.save(workspaceUser);
+            return new ApiResponse("Success", true);
+        }
+        return new ApiResponse("Error", false);
+    }
+
+    @Override
+    public ApiResponse getWorkspaceMembers(Long id) {
+        Optional<Workspace> optionalWorkspace = workspaceRepository.findById(id);
+        if (optionalWorkspace.isEmpty()){
+            return new ApiResponse("Workspace not found", false);
+        }
+        List<User> members = new ArrayList<>();
+        for (WorkSpaceRoleName value : WorkSpaceRoleName.values()) {
+            if (value!=WorkSpaceRoleName.ROLE_GUEST){
+                List<WorkspaceUser> workspaceUsers = workspaceUserRepository.findAllByWorkspaceId_IdAndWorkspaceRole_Name(id, value.name());
+                workspaceUsers.stream().map(workspaceUser -> members.add(workspaceUser.getOwnerId())).collect(Collectors.toList());
+            }
+        }
+        return new ApiResponse("OK", true,
+                mapper.toUserDto(members));
+    }
+
+    @Override
+    public ApiResponse getWorkspaceGuests(Long id) {
+        Optional<Workspace> optionalWorkspace = workspaceRepository.findById(id);
+        if (optionalWorkspace.isEmpty()){
+            return  new ApiResponse("Workspace not found",false);
+        }
+        List<User> gustUsers = new ArrayList<>();
+        List<WorkspaceUser> gusetWorkspaceUsers = workspaceUserRepository.findAllByWorkspaceId_IdAndWorkspaceRole_Name(id, WorkSpaceRoleName.ROLE_GUEST.name());
+        gusetWorkspaceUsers.stream().map(workspaceUser -> gustUsers.add(workspaceUser.getOwnerId())).collect(Collectors.toList());
+        return new ApiResponse("Ok",true ,mapper.toUserDto(gustUsers)); // bu yerda mehmonUserlar ro'xati
+    }
+
+    @Override
+    public ApiResponse getUserWorkspaces(Long userId) {
+        return new ApiResponse("OK", true,
+                mapper.toWorkspaceDto(workspaceRepository.findAllByOwnerId(userId)));
     }
 
     @Override
     public ApiResponse changeOwnerWorkspace(Long id, Long ownerId) {
-
-//        Optional<User> userchange = userRepository.findById(id);
 //
-//        Optional<User> ownerOptinal = userRepository.findById(ownerId);
-//
-//        if(userchange.isEmpty()){
-//            return new ApiResponse("user not found",false);
-//
-//        }
-//        if(ownerOptinal.isEmpty()){
-//            return new ApiResponse("owner not found",false);
-//        }
-//        User user = userchange.get();
-//        User owner = ownerOptinal.get();
         Optional<WorkspaceUser> ownerChangerOptional = workspaceUserRepository.findByOwnerId_Id(ownerId);
         Optional<WorkspaceUser> userChangeOptional = workspaceUserRepository.findByOwnerId_Id(id);
 
@@ -131,15 +220,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         workspaceUserRepository.saveAll(Arrays.asList(director,workspaceUser1));
 
 
-//        Workspace workspace = director.getWorkspaceId();
-//        User owner = workspace.getOwner();
-//        User changeOwner = workspaceUser1.getOwnerId();
-//        Optional<WorkspaceRole> workspaceRoleOptional = workspaceRoleRepository.findByWorkspaceId(workspace);
-//        WorkspaceRole workspaceRole = workspaceRoleOptional.get();
-//        WorkSpaceRoleName[] workSpaceRoleNames = WorkSpaceRoleName.values();
-//        workspaceRole.setName(WorkSpaceRoleName.ROLE_ADMIN.name());
-//        workspace.setOwner(changeOwner);
-//        workspaceUser1.setOwnerId();
+//
 
         return new ApiResponse("Successfully Edited",true);
     }
