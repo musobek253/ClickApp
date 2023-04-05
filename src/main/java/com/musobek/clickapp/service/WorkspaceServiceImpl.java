@@ -46,33 +46,30 @@ public class WorkspaceServiceImpl implements WorkspaceService {
                 workspaceDTO.getName(),
                 workspaceDTO.getColor(),
                 user,
-                workspaceDTO.getAvatarId() == null ? null : attachmentRepository.findById(workspaceDTO.getAvatarId()).orElseThrow(() -> new ResourceNotFoundException("attachment")));
+                null);
         Workspace workspaceSave = workspaceRepository.save(workspace);
         // ishxonaga xodimlarga rollarini berish
-        WorkspaceRole ownerUser = workspaceRoleRepository.save(
-                new WorkspaceRole(
-                    workspaceSave,
-                    WorkSpaceRoleName.ROLE_OWNER, null
-                )
-        );
-        WorkspaceRole AdminUser = workspaceRoleRepository.save(
-                new WorkspaceRole(
-                        workspaceSave, WorkSpaceRoleName.ROLE_ADMIN,null
-                )
-        );
-        WorkspaceRole memberUser = workspaceRoleRepository.save(
-                new WorkspaceRole(
-                        workspaceSave,
-                        WorkSpaceRoleName.ROLE_MEMBER, null
-                )
-        );
-        WorkspaceRole guestUser = workspaceRoleRepository.save(
-                new WorkspaceRole(
-                        workspaceSave,
-                        WorkSpaceRoleName.ROLE_GUEST, null
-                )
-        );
-        // ishxon  xodimlariga vazifa va huqularini berish
+
+        WorkspaceRole ownerUser = new WorkspaceRole();
+        ownerUser.setWorkspaceId(workspaceSave);
+        ownerUser.setName(WorkSpaceRoleName.ROLE_OWNER.name());
+        ownerUser.setExtendsRole(null);
+        workspaceRoleRepository.save(ownerUser);
+        WorkspaceRole AdminUser = new WorkspaceRole();
+        AdminUser.setWorkspaceId(workspaceSave);
+        AdminUser.setName(WorkSpaceRoleName.ROLE_ADMIN.name());
+        AdminUser.setExtendsRole(null);
+        workspaceRoleRepository.save(AdminUser);
+        WorkspaceRole memberUser = new WorkspaceRole();
+        memberUser.setWorkspaceId(workspaceSave);
+        memberUser.setName(WorkSpaceRoleName.ROLE_MEMBER.name());
+        memberUser.setExtendsRole(null);
+        workspaceRoleRepository.save(memberUser);        WorkspaceRole guestUser = new WorkspaceRole();
+        guestUser.setWorkspaceId(workspaceSave);
+        guestUser.setName(WorkSpaceRoleName.ROLE_GUEST.name());
+        guestUser.setExtendsRole(null);
+        workspaceRoleRepository.save(guestUser);
+        //ishxon  xodimlariga vazifa va huqularini berish
         Permission[] permissions = Permission.values();
         List<WorkspacePermission> workspacePermissionList = new ArrayList<>();
         for (Permission permission : permissions) {

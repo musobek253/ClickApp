@@ -45,7 +45,7 @@ public class AuthController {
         }
     }
     @PutMapping("/verifyEmail")
-    public HttpEntity<?> verifyEmail( @RequestBody String email, @RequestBody String emailCode) {
+    public HttpEntity<?> verifyEmail( @RequestParam String email, @RequestParam String emailCode) {
         ApiResponse apiResponse = authService.verifyEmail(email, emailCode);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }

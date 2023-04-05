@@ -30,13 +30,7 @@ public class WorkspaceRole  extends AbsLongEntity {
     public WorkspaceRole(Workspace workspaceSave, WorkSpaceRoleName roleOwner, Object extendsRole) {
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        WorkspaceRole that = (WorkspaceRole) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
-    }
+
 
     @Override
     public int hashCode() {

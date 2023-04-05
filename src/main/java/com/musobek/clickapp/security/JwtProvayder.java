@@ -12,7 +12,6 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 
 
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class JwtProvayder {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24*60))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

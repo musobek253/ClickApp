@@ -22,7 +22,7 @@ public class Workspace extends AbsLongEntity {
     @Column(nullable = false)
     private String color;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Attachment attachmentId;
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -36,18 +36,9 @@ public class Workspace extends AbsLongEntity {
     public void setInitialLetterMyMethod() {
         this.initialLetter = name.substring(0, 1);
     }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Workspace workspace = (Workspace) o;
-        return getId() != null && Objects.equals(getId(), workspace.getId());
-    }
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+
+
     public Workspace(String name, String color, User owner, Attachment avatar) {
         this.name = name;
         this.color = color;

@@ -7,6 +7,9 @@ import com.musobek.clickapp.entity.enam.RoleName;
 import com.musobek.clickapp.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +25,7 @@ public class AuthService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-//    private final JavaMailSender javaMailSender;
+   private final JavaMailSender javaMailSender;
 
 
 
@@ -38,36 +41,26 @@ public class AuthService implements UserDetailsService {
         int code = new Random().nextInt(999999);
         user.setEmailCode(String.valueOf(code).substring(0,4));
         userRepository.save(user);
-//        sendEmail(registerDto.getEmail(),  user.getEmailCode());
+        sendEmail(registerDto.getEmail(),  user.getEmailCode());
         return new ApiResponse("User saqlandi", true);
 
     }
-//    public Boolean sendEmail(String email, String emailCode) {
-//
-//        try {
-//            SimpleMailMessage mailMessage = new SimpleMailMessage();
-//            mailMessage.setFrom("qudratovmuso2022@gmail.com");
-//            mailMessage.setTo(email);
-//            mailMessage.setSubject("Akkountni tasdiqlash");
-//            mailMessage.setText(emailCode);
-//            javaMailSender.send(mailMessage);
-//
-//            return true;
-//        } catch (Exception e) {
-//            return false;
-////        }
-//    }
+    public Boolean sendEmail(String email, String emailCode) {
 
-//    public String sendsms(String phoneNumber ,String emailcode)
-//    {
-//
-//        Message message=Message.creator(new PhoneNumber(phoneNumber),
-//                new PhoneNumber(twilloProperties.getFromPhone()),
-//                emailcode).create();
-//        return message.getStatus().toString();
-//
-//
-//    }
+        try {
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setFrom("qudratovmuso2022@gmail.com");
+            mailMessage.setTo(email);
+            mailMessage.setSubject("Akkountni tasdiqlash");
+            mailMessage.setText(emailCode);
+            javaMailSender.send(mailMessage);
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public ApiResponse verifyEmail(String email, String emailCode) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
