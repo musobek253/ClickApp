@@ -1,6 +1,7 @@
 package com.musobek.clickapp.entity;
 
 import com.musobek.clickapp.entity.enam.Types;
+import com.musobek.clickapp.entity.template.AbsLongEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,22 +13,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Status {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "space_id"}))
+public class Status extends AbsLongEntity {
+    @Column(nullable = false)
     private String name;
-    @ManyToOne
-    private Project projectId;
-    @ManyToOne
-    private Space spaceId;
-    @ManyToOne
-    private Category categoryId;
 
-    @Enumerated(value = EnumType.STRING)
-    private Types types;
-
+    @Column(nullable = false)
     private String color;
+
+    @ManyToOne
+    private Space space;
+
+    @ManyToOne
+    private Project project;
+
+    @ManyToOne
+    private Category category;
+
+    @Enumerated(EnumType.STRING)
+    private Types statusType;
 }

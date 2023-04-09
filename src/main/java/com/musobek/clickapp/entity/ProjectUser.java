@@ -1,6 +1,7 @@
 package com.musobek.clickapp.entity;
 
 import com.musobek.clickapp.entity.enam.Permission;
+import com.musobek.clickapp.entity.template.AbsLongEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,17 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class ProjectUser {
+public class ProjectUser extends AbsLongEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @ManyToOne
+    private User member;
 
-    private String name;
     @ManyToOne
-    private Project projectId;
-    @ManyToOne
-    private User userId;
-    @Enumerated(value = EnumType.STRING)
+    private Project project;
+
+    @Enumerated(EnumType.STRING)
     private Permission permission;
 }
