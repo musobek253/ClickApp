@@ -21,4 +21,9 @@ public class SpaceView {
     private Space spaceId;
     @ManyToOne
     private View viewId;
+
+    public SpaceView(Space spaceId, View viewId) {
+        this.spaceId = spaceId;
+        this.viewId = viewId;
+    }
 }

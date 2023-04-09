@@ -18,5 +18,8 @@ public class SpaceClickApps {
     @ManyToOne
     private ClickApps clickAppsId;
 
-
+    public SpaceClickApps(Space spaceId, ClickApps clickAppsId) {
+        this.spaceId = spaceId;
+        this.clickAppsId = clickAppsId;
+    }
 }

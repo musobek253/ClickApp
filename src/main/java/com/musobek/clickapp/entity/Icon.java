@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Icon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String color;
     private String initialLetter;
     private String icon;

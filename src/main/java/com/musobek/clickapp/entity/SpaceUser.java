@@ -12,9 +12,14 @@ import lombok.NoArgsConstructor;
 public class SpaceUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @ManyToOne
     private Space spaceId;
     @ManyToOne
     private User userId;
+
+    public SpaceUser(Space spaceId, User userId) {
+        this.spaceId = spaceId;
+        this.userId = userId;
+    }
 }
