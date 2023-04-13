@@ -28,7 +28,7 @@ public class SecurityConfig {
     private final AuthService authService;
     private final JwtFilter jwtFilter;
 
-    public SecurityConfig(@Lazy AuthService authService, JwtFilter jwtFilter) {
+    public SecurityConfig(@Lazy AuthService authService, @Lazy JwtFilter jwtFilter) {
         this.authService = authService;
         this.jwtFilter = jwtFilter;
     }

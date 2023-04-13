@@ -1,5 +1,6 @@
 package com.musobek.clickapp.entity;
 
+import com.musobek.clickapp.entity.template.AbsLongEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,23 +9,31 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Entity
-public class TaskHistory {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class TaskHistory extends AbsLongEntity {
 
     @ManyToOne
-    private Task taskId;
+    private Task task;
 
+    @Column
     private String changeFieldName;
 
-    private boolean before;
+    @Column
+    private String before;
 
-    private boolean after;
+    @Column
+    private String after;
 
-    private Date date;
+    @Column
+    private String data;
+
+    public TaskHistory(Task task, String changeField, String before, String after, String data) {
+        this.task = task;
+        this.after = after;
+        this.before = before;
+        this.changeFieldName = changeField;
+        this.data = data;
+    }
 }

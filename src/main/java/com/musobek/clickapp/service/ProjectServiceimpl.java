@@ -28,7 +28,7 @@ public class ProjectServiceimpl implements ProjectService {
     private final  StatusRepository statusRepository;
     @Override
     public ApiResponse create(ProjectDto dto) {
-        if(projectRepository.existsByNameAndSpaceIdId(dto.getName(), dto.getSpaceId())){
+        if(projectRepository.existsByNameAndSpace_Id(dto.getName(),dto.getSpaceId())){
             return new ApiResponse("Allready exist by project name",false);
         }
         Optional<Space> optionalSpace = spaceRepository.findById(dto.getSpaceId());

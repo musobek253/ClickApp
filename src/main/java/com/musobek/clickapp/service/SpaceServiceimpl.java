@@ -207,7 +207,7 @@ public class SpaceServiceimpl implements SpaceService {
         for (SpaceView spaceView : spaceViews) {
             views.add(spaceView.getViewId());
         }
-        return new ApiResponse("ok",true,views);
+        return new ApiResponse("ok",true,maper.toViewDto(views));
 //                new ApiResponse("OK", true, mapper.toViewDto(views));
     }
 

@@ -17,12 +17,16 @@ public class CheckListItem {
 
     private String name;
 
-    private String resolved;
+    @Column
+    private boolean resolved = false;
 
     @ManyToOne
     private CheckList checkListId;
 
-    @ManyToOne
-    private User assignedUserId;
+    public CheckListItem(String name, CheckList checkList, boolean resolved) {
+        this.checkListId = checkList;
+        this.name = name;
+        this.resolved = resolved;
+    }
 }
 

@@ -19,4 +19,9 @@ public class TaskTag {
     private Task taskId;
     @ManyToOne
     private Tag tagId;
+
+    public TaskTag(Task task, Tag savedTag) {
+        this.taskId = task;
+        this.tagId = savedTag;
+    }
 }

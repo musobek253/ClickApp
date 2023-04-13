@@ -21,4 +21,9 @@ public class Comment {
 
     @ManyToOne
     private Task taskId;
+
+    public Comment(String text, Task task) {
+        this.name =text;
+        this.taskId = task;
+    }
 }

@@ -21,5 +21,10 @@ public class CheckList {
 
     @ManyToOne
     private Task taskId;
+
+    public CheckList(String name, Task task) {
+        this.name = name;
+        this.taskId= task;
+    }
 }
 
