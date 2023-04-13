@@ -20,4 +20,10 @@ public class Tag {
     private String name;
     @ManyToOne
     private Workspace workspaceId;
+
+    public Tag(String name, String color, Workspace workspace) {
+        this.name= name;
+        this.color = color;
+        this.workspaceId = workspace;
+    }
 }

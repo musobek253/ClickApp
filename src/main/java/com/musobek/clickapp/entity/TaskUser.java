@@ -21,4 +21,9 @@ public class TaskUser {
     private Task taskId;
     @ManyToOne
     private User userId;
+
+    public TaskUser(User currentUser, Task savedTask) {
+        this.taskId = savedTask;
+        this.userId = currentUser;
+    }
 }

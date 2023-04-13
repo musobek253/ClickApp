@@ -1,6 +1,7 @@
 package com.musobek.clickapp.entity;
 
 
+import com.musobek.clickapp.entity.template.AbsLongEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,33 +14,60 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Task {
+public class Task extends AbsLongEntity   {
+        private String name;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+        @Column
+        private String description;
 
-    private String name;
+        @ManyToOne
+        private Status status;
 
-    private String description;
+        @ManyToOne
+        private Category category;
 
-    @ManyToOne
-    private Status statusId;
+        @ManyToOne
+        private Priority priority;
 
-    @ManyToOne
-    private Category categoryId;
+        @ManyToOne
+        private Task parent;
 
-    @ManyToOne
-    private Priority priorityId;
+        @Column
+        private Timestamp startedDate;
 
-    @ManyToOne
-    private Task parentTaskId;
+        private boolean startTimeHas = false;
 
-    private Date startedDate;
-    private Timestamp startTimeHas;
-    private Date dueDate;
-    private Timestamp dueTimeHas;
-    private Long estimateTime;
-    private Date activedDate;
+        private boolean dueTimeHas = false;
 
+        @Column
+        private Timestamp dueDate;
+
+        @Column
+        private Long estimateTime;
+
+        @Column
+        private Timestamp activateDate;
+
+        public Task(String name, Status status, Category category, Priority priority, Timestamp startedDate, boolean startTimeHas, boolean dueTimeHas, Timestamp dueDate) {
+            this.name = name;
+            this.status = status;
+            this.category = category;
+            this.priority = priority;
+            this.startedDate = startedDate;
+            this.startTimeHas = startTimeHas;
+            this.dueTimeHas = dueTimeHas;
+            this.dueDate = dueDate;
+        }
+
+        public Task(String name, Priority priority, Task parent, Timestamp startedDate, boolean startTimeHas, boolean dueTimeHas, Timestamp dueDate, Long estimateTime, Timestamp activateDate) {
+            this.name = name;
+            this.priority = priority;
+            this.parent = parent;
+            this.startedDate = startedDate;
+            this.startTimeHas = startTimeHas;
+            this.dueTimeHas = dueTimeHas;
+            this.dueDate = dueDate;
+            this.estimateTime = estimateTime;
+            this.activateDate = activateDate;
+        }
 }

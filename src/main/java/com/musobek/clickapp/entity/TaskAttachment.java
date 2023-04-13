@@ -26,5 +26,10 @@ public class TaskAttachment {
 
     @ManyToOne
     private Attachment attachmentId;
+
+    public TaskAttachment(Task task, Attachment savedAttachment) {
+        this.attachmentId = savedAttachment;
+        this.taskId = task;
+    }
 }
 

@@ -19,9 +19,14 @@ public class Attachment extends AbsLongEntity
 {
 
     private String name;
+
     private String originalName;
+
     private Long size;
+
     private String contentType;
+
+    private String path;
 
 
 }

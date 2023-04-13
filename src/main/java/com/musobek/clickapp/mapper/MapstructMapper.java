@@ -1,13 +1,7 @@
 package com.musobek.clickapp.mapper;
 
-import com.musobek.clickapp.dto.res.SpaceRespDto;
-import com.musobek.clickapp.dto.res.UserRespDto;
-import com.musobek.clickapp.dto.res.ViewRespDto;
-import com.musobek.clickapp.dto.res.WorkspaceRespDto;
-import com.musobek.clickapp.entity.Space;
-import com.musobek.clickapp.entity.User;
-import com.musobek.clickapp.entity.View;
-import com.musobek.clickapp.entity.Workspace;
+import com.musobek.clickapp.dto.res.*;
+import com.musobek.clickapp.entity.*;
 import com.musobek.clickapp.entity.enam.AccessType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -50,10 +44,53 @@ public interface MapstructMapper {
     List<SpaceRespDto> toSpaceDto(List<Space> space);
 
     /**
-     * View
+     * Category
      */
-//    @Mapping(source = "iconId.id", target = "icon")
-//
-//    ViewRespDto toViewDto(View view);
-//    List<ViewRespDto> toViewDto(List<View> views);
+
+    @Mapping(source = "project.id", target = "project")
+    CategoryRespDto toCategoryDto(Category category);
+
+    List<CategoryRespDto> toCategoryDto(List<Category> categories);
+    /**
+     * view
+     */
+
+    @Mapping(source = "iconId.id", target = "icon")
+
+    ViewRespDto toViewDto(View view);
+    List<ViewRespDto> toViewDto(List<View> views);
+    /**
+     * Status
+     */
+
+    @Mapping(source = "space.id",target = "spaceId")
+    @Mapping(source = "project.id",target = "projectId")
+    @Mapping(source = "category.id",target = "categoryId")
+    StatusRespDto toStatusDto(Status status);
+    List<StatusRespDto> toStatusDto(List<Status> statuses);
+
+    /**
+     * task
+     */
+    @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "parent.id", target = "parentId")
+    @Mapping(source = "priority.id", target = "priorityId")
+    TaskResDto toTaskDto(Task task);
+
+    List<TaskResDto> toTaskDto(List<Task> tasks);
+
+    /**
+     * tag
+     */
+    @Mapping(source = "workspaceId.id",target = "workspaceId")
+
+    TagResDto toTagDto(Tag tag);
+    List<Tag> toTagDto(List<Tag> tags);
+    /**
+     * Comment
+     */
+
+    @Mapping(source = "taskId.id",target = "taskId")
+   CommentResDto toCommentDto(Comment comment);
+    List<CommentResDto>  toCommentDto(List<Comment> comments);
 }
