@@ -298,4 +298,9 @@ public class TaskServiceimpl implements TaskService {
         TaskHistory taskHistory = new TaskHistory(task, changeField, before, after, data);
         taskHistoryRepository.save(taskHistory);
     }
+    private void createTaskHistory(Task task, String changeField, String before, String after, String data) {
+        TaskHistory taskHistory = new TaskHistory(task, changeField, before, after, data);
+        taskHistoryRepository.save(taskHistory);
+    }
+
 }
